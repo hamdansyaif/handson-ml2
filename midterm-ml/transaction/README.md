@@ -1,17 +1,39 @@
-#### **Project Summary**
+# Fraud Detection System: End-to-End Machine Learning & Deep Learning Pipeline
 
-  * **Goal:** Mendeteksi transaksi penipuan (Fraud) dari dataset yang sangat *imbalanced* (hanya 3.5% fraud).
-  * **Pipeline:**
-    1.  **Preprocessing:** Menggunakan `Polars` untuk efisiensi memori, mengisi missing value dengan marker khusus (-1), dan Time Engineering (mengubah detik menjadi Jam/Hari).
-    2.  **Splitting:** Time-Series Split (80% awal untuk train, 20% akhir untuk validasi) untuk mencegah kebocoran data masa depan.
-    3.  **Modeling:** Membandingkan LightGBM vs Neural Network (PyTorch).
+## 📋 Project Overview
+Project ini bertujuan untuk mendeteksi transaksi penipuan (*fraud detection*) pada dataset transaksi keuangan skala besar. Tantangan utama dataset ini adalah ukuran data yang besar (590k+ baris) dan ketidakseimbangan kelas (*class imbalance*) dimana hanya 3.5% transaksi yang merupakan fraud.
 
-#### **Hasil Eksperimen (Benchmark)**
+Pipeline dibangun secara *end-to-end* mencakup:
+1. **Data Preprocessing** (Polars, Handling Missing Values, Time Engineering).
+2. **Machine Learning Model** (LightGBM).
+3. **Deep Learning Model** (Neural Network dengan PyTorch).
+4. **Evaluation & Comparison**.
 
-| Model | AUC Score | Waktu Training | Kesimpulan |
-| :--- | :--- | :--- | :--- |
-| **LightGBM** | **0.9135** | \~2 Menit | **Sangat Baik.** Mampu menangani *missing values* dan data kategorikal secara native. Sangat efisien. |
-| **Deep Learning (MLP)** | 0.8684 | \~10 Menit | **Cukup Baik.** Namun kalah akurat dibanding Tree-based model untuk data tabular ini. Membutuhkan scaling data yang ketat. |
+## 🛠️ Tech Stack
+* **Language:** Python
+* **Data Processing:** Polars (High Performance), Pandas, NumPy
+* **Machine Learning:** LightGBM (Gradient Boosting)
+* **Deep Learning:** PyTorch
+* **Environment:** Google Colab
 
-**Kesimpulan Akhir:**
-Model **LightGBM** dipilih sebagai model final karena memberikan performa AUC tertinggi, training time tercepat, dan penggunaan memori yang lebih efisien dibandingkan arsitektur Deep Learning untuk dataset transaksi ini.
+## 📊 Experimental Results
+
+Kami membandingkan performa dua pendekatan model:
+
+| Model | Type | AUC Score (Validation) | Training Time | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **LightGBM** | Machine Learning | **0.9135** | ~2 Menit | **Best Model.** Sangat efisien menangani data tabular dan missing values. |
+| **Simple Neural Network** | Deep Learning | 0.8684 | ~10 Menit | Dilatih menggunakan *Balanced Sub-sampling* (50k data) dikarenakan limitasi memori (RAM). |
+
+**Analisis:**
+Model **LightGBM** terbukti lebih unggul untuk kasus ini. Deep Learning memiliki potensi, namun membutuhkan *resource* komputasi yang jauh lebih besar dan *feature engineering* yang lebih kompleks (seperti Embedding) untuk mengalahkan performa *Tree-based model* pada data tabular.
+
+## 🚀 How to Run
+1. Clone repository ini.
+2. Download dataset IEEE-CIS Fraud Detection.
+3. Jalankan notebook `Midterm_Fraud_Detection.ipynb`.
+   * **Note:** Pastikan Runtime memiliki RAM minimal 12GB. Jika menggunakan Google Colab Free Tier, script menggunakan strategi *Low Memory Management* (Estafet Loading) agar tidak crash.
+
+## 📂 Submission Files
+* `Midterm_Fraud_Detection.ipynb`: Source code lengkap (EDA, Preprocessing, Modeling).
+* `submission_final.csv`: Hasil prediksi probabilitas fraud pada data test.
